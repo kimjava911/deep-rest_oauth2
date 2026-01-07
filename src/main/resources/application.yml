@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: rest_oauth2
+
+  profiles:
+    active: dev
+
+logging:
+  level:
+    org.springframework.security: INFO
+
+server:
+  port: 8080

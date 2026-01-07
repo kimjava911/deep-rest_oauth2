@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>OAuth2 REST Social Login Demo</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; padding: 24px; }
+        .btn { display: inline-block; padding: 10px 12px; margin-right: 8px; border: 1px solid #ccc; text-decoration: none; }
+        pre { background: #f6f6f6; padding: 12px; }
+    </style>
+</head>
+<body>
+<h2>소셜 로그인 (Google / GitHub / Kakao)</h2>
+
+<!-- [설명] Spring Security OAuth2 Client 기본 엔드포인트:
+     /oauth2/authorization/{registrationId} -->
+<div>
+    <a class="btn" href="/oauth2/authorization/google">Google 로그인</a>
+    <a class="btn" href="/oauth2/authorization/github">GitHub 로그인</a>
+    <a class="btn" href="/oauth2/authorization/kakao">Kakao 로그인</a>
+</div>
+
+<div style="margin-top: 16px;">
+    <button class="btn" id="logoutBtn" type="button">REST 로그아웃</button>
+</div>
+
+<h3 style="margin-top: 24px;">/api/me 응답</h3>
+<pre id="meBox">loading...</pre>
+
+<script>
+    async function loadMe() {
+        const res = await fetch('/api/me', { credentials: 'same-origin' });
+        const json = await res.json();
+        document.getElementById('meBox').textContent = JSON.stringify(json, null, 2);
+    }
+
+    async function logout() {
+        const res = await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'same-origin'
+        });
+
+        if (res.status === 204) {
+            await loadMe();
+            alert('로그아웃 완료');
+        } else {
+            alert('로그아웃 실패: ' + res.status);
+        }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    loadMe();
+</script>
+</body>
+</html>
